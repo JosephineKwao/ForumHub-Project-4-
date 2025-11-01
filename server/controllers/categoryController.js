@@ -1,14 +1,19 @@
-import Question from "../models/questionModel.js";
+import Category from "../models/categoryModel.js";
 
-export const getQuestionsByCategory = async (req, res) => {
-  const { categoryId } = req.params;
-  const questions = await Question.find({ category: categoryId }).populate("user", "username");
-  res.json(questions);
+export const getCategories = async (req, res) => {
+  try {
+    const cats = await Category.find();
+    res.json(cats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-export const createQuestion = async (req, res) => {
-  const { category, question } = req.body;
-  const newQ = new Question({ category, question, user: req.user.id });
-  await newQ.save();
-  res.status(201).json(newQ);
+export const createCategory = async (req, res) => {
+  try {
+    const category = await Category.create({ name: req.body.name });
+    res.status(201).json(category);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
