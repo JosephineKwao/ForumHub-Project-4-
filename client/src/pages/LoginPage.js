@@ -21,13 +21,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "400px", margin: "50px auto" }}>
       <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} required />
         <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} required />
         <button type="submit">Login</button>
-        {error && <p style={{color:"red"}}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
       <p>Don't have an account? <Link to="/register">Register</Link></p>
     </div>
