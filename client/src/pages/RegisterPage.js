@@ -20,14 +20,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "400px", margin: "50px auto" }}>
       <h2>Register</h2>
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <input type="text" placeholder="Username" value={username} onChange={e=>setUsername(e.target.value)} required />
         <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} required />
         <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} required />
         <button type="submit">Register</button>
-        {error && <p style={{color:"red"}}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
       <p>Already have an account? <Link to="/">Login</Link></p>
     </div>

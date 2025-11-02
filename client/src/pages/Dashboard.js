@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 import Navbar from "../components/Navbar";
@@ -14,7 +14,7 @@ export default function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    if (!user) navigate("/"); // redirect if not logged in
+    if (!user) navigate("/");
     fetchCategories();
   }, []);
 
@@ -39,9 +39,9 @@ export default function Dashboard() {
 
   return (
     <div>
-      <Navbar user={user} />
-      <div style={{ display: "flex" }}>
-        <div style={{ width: "200px", borderRight: "1px solid gray", overflowY: "auto" }}>
+      {user && <Navbar user={user} />}
+      <div style={{ display: "flex", marginTop: "10px" }}>
+        <div style={{ width: "200px", borderRight: "1px solid gray", overflowY: "auto", padding: "10px" }}>
           <h3>Categories</h3>
           <CategoryList categories={categories} onSelect={handleSelectCategory} />
         </div>
