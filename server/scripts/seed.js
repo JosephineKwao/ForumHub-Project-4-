@@ -12,12 +12,12 @@ const seedData = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ Connected to MongoDB for seeding...");
 
-    // Clear old data
+    
     await User.deleteMany();
     await Category.deleteMany();
     await Question.deleteMany();
 
-    // Create demo user
+    
     const hashedPassword = await bcrypt.hash("demo1234", 10);
     const user = await User.create({
       username: "demoUser",
@@ -25,14 +25,14 @@ const seedData = async () => {
       password: hashedPassword
     });
 
-    // Create categories
+
     const categories = await Category.insertMany([
       { name: "JavaScript" },
       { name: "Node.js" },
       { name: "React" }
     ]);
 
-    // Create sample questions
+    
     const questions = await Question.insertMany([
       {
         category: categories[0]._id,
