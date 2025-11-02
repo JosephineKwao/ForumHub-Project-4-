@@ -1,53 +1,127 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../api/api";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom"; // added Link
 import Navbar from "../components/Navbar";
 import CategoryList from "../components/CategoryList";
 import QuestionCard from "../components/QuestionCard";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [questions, setQuestions] = useState([]);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  // Dummy user for testing
+  const user = { username: "TestUser" };
 
-  useEffect(() => {
-    if (!user) navigate("/");
-    fetchCategories();
-  }, []);
+  // Dummy categories
+  const dummyCategories = [
+    { _id: "1", name: "Dogs" },
+    { _id: "2", name: "Cats" },
+    { _id: "3", name: "Rabbits" },
+  ];
 
-  const fetchCategories = async () => {
-    try {
-      const res = await API.get("/categories");
-      setCategories(res.data);
-    } catch (err) {
-      console.error(err);
-    }
+  // Dummy questions
+  const dummyQuestions = {
+    "1": [
+      { _id: "q1", title: "How to train my dog?", body: "I need tips.", answers: [] },
+      { _id: "q2", title: "Best dog food?", body: "Looking for healthy options.", answers: [] },
+    ],
+    "2": [
+      { _id: "q3", title: "Why does my cat scratch?", body: "I need advice.", answers: [] },
+    ],
+    "3": [
+      { _id: "q4", title: "Rabbit housing tips?", body: "How to make a comfortable cage.", answers: [] },
+    ],
   };
 
-  const handleSelectCategory = async (id) => {
+  const [categories] = useState(dummyCategories);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [newQuestionTitle, setNewQuestionTitle] = useState("");
+  const [newQuestionBody, setNewQuestionBody] = useState("");
+
+  const handleSelectCategory = (id) => {
     setSelectedCategory(id);
-    try {
-      const res = await API.get(`/questions/category/${id}`);
-      setQuestions(res.data);
-    } catch (err) {
-      console.error(err);
-    }
+    setQuestions(dummyQuestions[id] || []);
+  };
+
+  const handleAddQuestion = (e) => {
+    e.preventDefault();
+    if (!newQuestionTitle || !newQuestionBody || !selectedCategory) return;
+
+    const newQuestion = {
+      _id: Date.now().toString(),
+      title: newQuestionTitle,
+      body: newQuestionBody,
+      answers: [],
+    };
+
+    setQuestions([newQuestion, ...questions]);
+    setNewQuestionTitle("");
+    setNewQuestionBody("");
   };
 
   return (
     <div>
-      {user && <Navbar user={user} />}
+      <Navbar user={user} />
+
+      {/* Optional Dashboard link */}
+      <div style={{ padding: "10px" }}>
+        <Link
+          to="/dashboard"
+          style={{
+            padding: "5px 10px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            borderRadius: "4px",
+            textDecoration: "none",
+          }}
+        >
+          Dashboard
+        </Link>
+      </div>
+
       <div style={{ display: "flex", marginTop: "10px" }}>
-        <div style={{ width: "200px", borderRight: "1px solid gray", overflowY: "auto", padding: "10px" }}>
+        {/* Left Panel: Categories */}
+        <div
+          style={{
+            width: "200px",
+            borderRight: "1px solid gray",
+            overflowY: "auto",
+            padding: "10px",
+          }}
+        >
           <h3>Categories</h3>
           <CategoryList categories={categories} onSelect={handleSelectCategory} />
         </div>
+
+        {/* Right Panel: Questions */}
         <div style={{ flex: 1, padding: "20px" }}>
+          {selectedCategory && (
+            <div style={{ marginBottom: "20px" }}>
+              <h4>Add New Question</h4>
+              <form
+                onSubmit={handleAddQuestion}
+                style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+              >
+                <input
+                  type="text"
+                  placeholder="Question Title"
+                  value={newQuestionTitle}
+                  onChange={(e) => setNewQuestionTitle(e.target.value)}
+                  required
+                />
+                <textarea
+                  placeholder="Question Body"
+                  value={newQuestionBody}
+                  onChange={(e) => setNewQuestionBody(e.target.value)}
+                  rows={3}
+                  required
+                />
+                <button type="submit">Submit Question</button>
+              </form>
+            </div>
+          )}
+
           {selectedCategory ? (
-            questions.map(q => <QuestionCard key={q._id} question={q} />)
+            questions.map((q) => <QuestionCard key={q._id} question={q} />)
           ) : (
             <p>Select a Category to view its questions</p>
           )}
