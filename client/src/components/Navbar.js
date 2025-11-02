@@ -10,12 +10,29 @@ export default function Navbar({ user }) {
   };
 
   return (
-    <nav style={{ display: "flex", justifyContent: "space-between", padding: "10px", borderBottom: "1px solid #ccc" }}>
+    <nav style={styles.nav}>
       <h2>PetLand</h2>
       <div>
         <span>{user?.username}</span>
-        <button onClick={handleLogout} style={{ marginLeft: "10px" }}>Logout</button>
+        <button onClick={handleLogout} style={styles.button}>Logout</button>
       </div>
     </nav>
   );
 }
+
+const styles = {
+  nav: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 20px",
+    borderBottom: "1px solid #ccc",
+    backgroundColor: "#f5f5f5",
+    marginBottom: "10px"
+  },
+  button: {
+    marginLeft: "10px",
+    padding: "5px 10px",
+    cursor: "pointer"
+  }
+};
