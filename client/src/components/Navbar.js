@@ -7,7 +7,7 @@ export default function Navbar({ user }) {
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token"); 
-    navigate("/"); // redirect to login page
+    navigate("/"); 
   };
 
   return (
@@ -24,7 +24,7 @@ export default function Navbar({ user }) {
       <div style={{ fontWeight: "bold", fontSize: "20px" }}>Forum App</div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-        {/* Dashboard button */}
+        
         <button
           onClick={() => navigate("/dashboard")}
           style={{
@@ -39,10 +39,10 @@ export default function Navbar({ user }) {
           Dashboard
         </button>
 
-        {/* Username */}
+        
         <span>Welcome, {user?.username}</span>
 
-        {/* Logout button */}
+        
         <button
           onClick={handleLogout}
           style={{
