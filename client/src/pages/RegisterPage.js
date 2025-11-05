@@ -13,23 +13,50 @@ export default function RegisterPage() {
     e.preventDefault();
     try {
       await API.post("/auth/register", { username, email, password });
-      navigate("/");
+      navigate("/"); // redirect to login
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      // ✅ Read the 'error' field sent by backend
+      setError(err.response?.data?.error || "Registration failed");
     }
   };
 
   return (
     <div style={{ maxWidth: "400px", margin: "50px auto" }}>
       <h2>Register</h2>
-      <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <input type="text" placeholder="Username" value={username} onChange={e=>setUsername(e.target.value)} required />
-        <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} required />
+      <form
+        onSubmit={handleRegister}
+        style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+      >
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          required
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Register</button>
+
+        {/* Display actual backend error */}
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
-      <p>Already have an account? <Link to="/">Login</Link></p>
+
+      <p>
+        Already have an account? <Link to="/">Login</Link>
+      </p>
     </div>
   );
 }
