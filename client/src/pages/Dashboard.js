@@ -4,56 +4,33 @@ import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  // Replace TestUser: we'll load actual user from /api/auth/me
-  const [user, setUser] = useState(null);
+  // ✅ Get user from localStorage instead of calling /auth/me
+  const storedUsername = localStorage.getItem("username");
+  const [user, setUser] = useState(storedUsername ? { username: storedUsername } : null);
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [questions, setQuestions] = useState([]);
 
-  // helper to get auth headers if token exists
+  // Redirect to login if no user is found
+  useEffect(() => {
+    if (!localStorage.getItem("token") || !storedUsername) {
+      navigate("/");
+    }
+  }, [navigate, storedUsername]);
+
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
-  // Load current user profile on mount (redirect to login if not found)
-  useEffect(() => {
-    async function loadUser() {
-      try {
-        const res = await fetch("http://localhost:5000/api/auth/me", {
-          headers: { "Content-Type": "application/json", ...getAuthHeaders() },
-        });
-
-        if (!res.ok) {
-          // not authenticated -> go to login
-          localStorage.removeItem("token");
-          navigate("/login");
-          return;
-        }
-
-        const profile = await res.json();
-        setUser(profile);
-      } catch (err) {
-        console.error("Error fetching current user:", err);
-        navigate("/login");
-      }
-    }
-
-    loadUser();
-  }, [navigate]);
-
-  // Fetch categories
+  // Load categories
   useEffect(() => {
     async function loadCategories() {
       try {
         const response = await fetch("http://localhost:5000/api/categories", {
           headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         });
-        if (!response.ok) {
-          console.error("Failed to load categories:", response.status);
-          return;
-        }
         const data = await response.json();
         setCategories(data);
       } catch (error) {
@@ -63,7 +40,7 @@ export default function Dashboard() {
     loadCategories();
   }, []);
 
-  // Fetch questions for a category
+  // Load questions when a category is selected
   const handleCategorySelect = async (categoryId) => {
     setSelectedCategory(categoryId);
     try {
@@ -71,11 +48,6 @@ export default function Dashboard() {
         `http://localhost:5000/api/questions/category/${categoryId}`,
         { headers: { "Content-Type": "application/json", ...getAuthHeaders() } }
       );
-      if (!response.ok) {
-        console.error("Failed to load questions:", response.status);
-        setQuestions([]);
-        return;
-      }
       const data = await response.json();
       setQuestions(data);
     } catch (error) {
@@ -84,13 +56,12 @@ export default function Dashboard() {
     }
   };
 
-  // Logout: clear token and redirect
+  // Logout
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    localStorage.clear();
+    navigate("/");
   };
 
-  // While user is loading, show nothing or a spinner
   if (!user) {
     return <div style={{ padding: 20 }}>Loading...</div>;
   }
@@ -153,7 +124,6 @@ export default function Dashboard() {
   );
 }
 
-// ---------- STYLES ----------
 const styles = {
   container: {
     height: "100vh",
