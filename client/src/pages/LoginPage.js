@@ -13,11 +13,11 @@ export default function LoginPage() {
     try {
       const res = await API.post("/auth/login", { username, password });
 
-      // ✅ Save token and username
+      
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", res.data.username);
 
-      // ✅ Go to dashboard
+      
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");

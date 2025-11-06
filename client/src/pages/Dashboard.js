@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  // ✅ Get user from localStorage instead of calling /auth/me
+  
   const storedUsername = localStorage.getItem("username");
   const [user, setUser] = useState(storedUsername ? { username: storedUsername } : null);
 
@@ -12,7 +12,7 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [questions, setQuestions] = useState([]);
 
-  // Redirect to login if no user is found
+  
   useEffect(() => {
     if (!localStorage.getItem("token") || !storedUsername) {
       navigate("/");
@@ -24,7 +24,7 @@ export default function Dashboard() {
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
-  // Load categories
+  
   useEffect(() => {
     async function loadCategories() {
       try {
@@ -40,7 +40,7 @@ export default function Dashboard() {
     loadCategories();
   }, []);
 
-  // Load questions when a category is selected
+  
   const handleCategorySelect = async (categoryId) => {
     setSelectedCategory(categoryId);
     try {
@@ -56,7 +56,7 @@ export default function Dashboard() {
     }
   };
 
-  // Logout
+  
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
@@ -69,7 +69,7 @@ export default function Dashboard() {
   return (
     <div style={styles.container}>
       <header style={styles.header}>
-        <h1 style={{ margin: 0 }}>🐾 Pet Forum Dashboard</h1>
+        <h1 style={{ margin: 0 }}> Kealphine Forum Dashboard</h1>
         <div style={styles.userSection}>
           <span>Welcome, {user.username}</span>
           <button onClick={handleLogout} style={styles.logoutBtn}>

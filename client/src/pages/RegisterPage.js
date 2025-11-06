@@ -13,9 +13,9 @@ export default function RegisterPage() {
     e.preventDefault();
     try {
       await API.post("/auth/register", { username, email, password });
-      navigate("/"); // redirect to login
+      navigate("/"); 
     } catch (err) {
-      // ✅ Read the 'error' field sent by backend
+      
       setError(err.response?.data?.error || "Registration failed");
     }
   };
@@ -50,7 +50,7 @@ export default function RegisterPage() {
         />
         <button type="submit">Register</button>
 
-        {/* Display actual backend error */}
+        
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
 
