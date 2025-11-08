@@ -97,7 +97,7 @@ export default function Dashboard() {
                 </div>
               ))
             ) : (
-              <p>Loading categories...</p>
+              <p>Loading categories... </p>
             )}
           </div>
         </aside>
